@@ -25,6 +25,10 @@ dist/
 build/
 *.log
 
+# Public folder - keep the folder but not its contents in git
+# public/*
+# !public/.gitkeep
+
 # IDE
 .vscode/
 .idea/

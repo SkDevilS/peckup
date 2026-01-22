@@ -75,12 +75,28 @@ const CustomerLayout = ({ isCartOpen, setIsCartOpen }) => {
     );
 };
 
+// Domain-based redirect component
+const DomainRedirect = () => {
+    useEffect(() => {
+        // Check if we're on admin subdomain and at root path
+        const hostname = window.location.hostname;
+        const pathname = window.location.pathname;
+        
+        if (hostname === 'admin.peckup.in' && pathname === '/') {
+            window.location.href = '/admin/login';
+        }
+    }, []);
+    
+    return null;
+};
+
 function App() {
     const [isCartOpen, setIsCartOpen] = useState(false);
 
     return (
         <ErrorBoundary>
             <Router>
+                <DomainRedirect />
                 <ScrollToTop />
                 <Routes>
                     {/* Admin Routes */}
