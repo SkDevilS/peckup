@@ -1,0 +1,42 @@
+[Unit]
+Description=Peckup Flask Backend API
+After=network.target mysql.service
+Wants=mysql.service
+
+[Service]
+Type=notify
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/peckup/peckup/backend
+Environment="PATH=/var/www/peckup/peckup/backend/venv/bin"
+Environment="FLASK_ENV=production"
+
+# Gunicorn configuration
+ExecStart=/var/www/peckup/peckup/backend/venv/bin/gunicorn \
+    --workers 4 \
+    --worker-class sync \
+    --bind 127.0.0.1:5000 \
+    --timeout 120 \
+    --keep-alive 5 \
+    --max-requests 1000 \
+    --max-requests-jitter 50 \
+    --access-logfile /var/log/peckup/access.log \
+    --error-logfile /var/log/peckup/error.log \
+    --log-level info \
+    app:app
+
+# Restart policy
+Restart=always
+RestartSec=10
+StartLimitInterval=200
+StartLimitBurst=5
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+
+# Resource limits
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
